@@ -58,13 +58,8 @@ function getTableData() {
 
 //create Tbody
 function createTableBody(data) {
-  name1.value = "";
-  description.value = "";
-  status1.value = "";
-  rate.value = "";
-  balance.value = "";
-  deposite.value = "";
   tbody.innerHTML = "";
+  clearInput();
   table.appendChild(tbody);
   for (const iterator of data) {
     let bodyRow = document.createElement("tr");
@@ -77,7 +72,6 @@ function createTableBody(data) {
         td.classList.add("bold");
       }
       if (key == "description") {
-
         td.classList.add("truncet-text");
       }
       if (key === "status") {
@@ -130,7 +124,7 @@ function createTableBody(data) {
     deleteButton.addEventListener("click", (event) => {
       event.preventDefault();
       deleteEmpolyee(iterator.id);
-      table.deleteRow(bodyRow.rowIndex);
+      getTableData();
     });
     td.appendChild(deleteButton);
 
@@ -195,28 +189,22 @@ function editEmployee(empData) {
 
   updateButton.addEventListener("click", (event) => {
     event.preventDefault();
-    let name1 = document.getElementById("name").value;
-    let description = document.getElementById("discription").value;
-    let status1 = document.getElementById("status").value;
-    let rate = document.getElementById("rate").value;
-    let balance = document.getElementById("balance").value;
-    let deposite = document.getElementById("deposite").value;
 
     if (
-      validateName(name1) &&
-      validateDescription(description) &&
-      validateStatus(status1) &&
-      validateRate(rate) &&
-      validateBalance(balance) &&
-      validateDeposite(deposite)
+      validateName(name1.value) &&
+      validateDescription(description.value) &&
+      validateStatus(status1.value) &&
+      validateRate(rate.value) &&
+      validateBalance(balance.value) &&
+      validateDeposite(deposite.value)
     ) {
       let updatedEmpData = {
-        name: name1,
-        description: description,
-        status: status1,
-        rate: rate,
-        balance: balance,
-        deposite: deposite,
+        name: name1.value,
+        description: description.value,
+        status: status1.value,
+        rate: rate.value,
+        balance: balance.value,
+        deposite: deposite.value,
       };
 
       fetch(`http://localhost:3000/employee/${empData.id}`, {
@@ -267,56 +255,6 @@ function getFilterOptions() {
   }
 }
 
-//name validation
-function validateName(value) {
-  name1.style.border = "1px solid green";
-  if (value.length <= 3) {
-    name1.style.border = "1px solid red";
-  } else if (value.length >= 25) {
-    name1.style.border = "1px solid red";
-  } else if (!value.trim().match(/^[a-zA-Z]*$/)) {
-    name1.style.border = "1px solid red";
-  } else {
-    return true;
-  }
-}
-
-//description validation
-function validateDescription(value) {
-  description.style.border = "1px solid green";
-  if (value.length <= 3) {
-    description.style.border = "1px solid red";
-  } else if (value.length >= 150) {
-    description.style.border = "1px solid red";
-  } else if (!value.trim().match(/^[a-zA-Z\s]*$/)) {
-    description.style.border = "1px solid red";
-  } else {
-    return true;
-  }
-}
-
-//status validation
-function validateStatus(value) {
-  status1.style.border = "1px solid green";
-  if (value.length == "") {
-    status1.style.border = "1px solid red";
-  } else {
-    return true;
-  }
-}
-
-//Rate Validation
-function validateRate(value) {
-  rate.style.border = "1px solid green";
-  if (value.length < 1) {
-    rate.style.border = "1px solid red";
-  } else if (!value.trim().match(/^\d*\.?\d+$/)) {
-    rate.style.border = "1px solid red";
-  } else {
-    return true;
-  }
-}
-
 //romve border for input text
 function noBorder() {
   name1.style.border = "";
@@ -325,6 +263,15 @@ function noBorder() {
   rate.style.border = "";
   balance.style.border = "";
   deposite.style.border = "";
+}
+
+function clearInput() {
+  name1.value = "";
+  description.value = "";
+  status1.value = "";
+  rate.value = "";
+  balance.value = "";
+  deposite.value = "";
 }
 
 //data not found message
@@ -336,14 +283,117 @@ function dataNotFound() {
   bodyRow.style.backgroundColor = "#ebf0fa";
   bodyRow.appendChild(document.createTextNode("*No Data Found*"));
   tbody.appendChild(bodyRow);
+
+  // tbody.innerHTML = "";
+  // table.removeChild(tbody);
+  // let message = document.createElement("div");
+  // message.className = "center-text";
+  // message.style.backgroundColor = "#ebf0fa";
+  // message.appendChild(document.createTextNode("*No Data Found*"));
+  // tableContainer.appendChild(message);
+}
+
+//span Error
+function addErrorMessage(containerElement, errorMessage) {
+  let errorSpan = document.createElement("span");
+  errorSpan.innerHTML = errorMessage;
+  errorSpan.style.color = "red";
+  errorSpan.style.fontSize = "12px";
+  errorSpan.style.paddingTop = "2px";
+  containerElement.appendChild(errorSpan);
+}
+
+//remove Span
+function removeSpan(div) {
+  let span = div.querySelector("span");
+  if (span) {
+    div.removeChild(span);
+  }
+}
+
+//name validation
+function validateName(value) {
+  let nameDiv = document.querySelector(".name-div");
+  removeSpan(nameDiv);
+  name1.style.border = "1px solid green";
+  if (value.length <= 3) {
+    name1.style.border = "1px solid red";
+    addErrorMessage(nameDiv, "Name must be greater that 3 character");
+  } else if (value.length >= 25) {
+    name1.style.border = "1px solid red";
+    addErrorMessage(nameDiv, "Name must be less that 25 character");
+  } else if (!value.trim().match(/^[a-zA-Z]*$/)) {
+    name1.style.border = "1px solid red";
+    addErrorMessage(nameDiv, "Name must contain alphabets only");
+  } else {
+    return true;
+  }
+}
+
+//description validation
+function validateDescription(value) {
+  let discriptionDiv = document.querySelector(".discription-div");
+  removeSpan(discriptionDiv);
+  description.style.border = "1px solid green";
+  if (value.length <= 3) {
+    description.style.border = "1px solid red";
+    addErrorMessage(
+      discriptionDiv,
+      "Discription must be greater that 3 character"
+    );
+  } else if (value.length >= 150) {
+    description.style.border = "1px solid red";
+    addErrorMessage(
+      discriptionDiv,
+      "Discription must be less that 150 character"
+    );
+  } else if (!value.trim().match(/^[a-zA-Z\s]*$/)) {
+    description.style.border = "1px solid red";
+    addErrorMessage(discriptionDiv, "Discription must contain alphabets only");
+  } else {
+    return true;
+  }
+}
+
+//status validation
+function validateStatus(value) {
+  let statusDiv = document.querySelector(".status-div");
+  removeSpan(statusDiv);
+  status1.style.border = "1px solid green";
+  if (value.length == "") {
+    addErrorMessage(statusDiv, "Select status");
+    status1.style.border = "1px solid red";
+  } else {
+    return true;
+  }
+}
+
+//Rate Validation
+function validateRate(value) {
+  let rateDiv = document.querySelector(".rate-div");
+  removeSpan(rateDiv);
+  rate.style.border = "1px solid green";
+  if (value.length < 1) {
+    addErrorMessage(rateDiv, "Enter rate");
+    rate.style.border = "1px solid red";
+  } else if (!value.trim().match(/^\d*\.?\d+$/)) {
+    addErrorMessage(rateDiv, "Enter number only");
+    rate.style.border = "1px solid red";
+  } else {
+    return true;
+  }
 }
 
 //Date Validation
 function validateBalance(value) {
+  let balanceDiv = document.querySelector(".balance-div");
+  removeSpan(balanceDiv);
   balance.style.border = "1px solid green";
   if (value.length < 1) {
+    addErrorMessage(balanceDiv, "Enter balance");
     balance.style.border = "1px solid red";
   } else if (!value.trim().match(/^-?\d*\.{0,1}\d+$/)) {
+    addErrorMessage(balanceDiv, "Enter number only");
     balance.style.border = "1px solid red";
   } else {
     return true;
@@ -352,10 +402,14 @@ function validateBalance(value) {
 
 //Deposite Validation
 function validateDeposite(value) {
+  let depositeDiv = document.querySelector(".deposite-div");
+  removeSpan(depositeDiv);
   deposite.style.border = "1px solid green";
   if (value.length < 1) {
+    addErrorMessage(depositeDiv, "Enter balance");
     deposite.style.border = "1px solid red";
   } else if (!value.trim().match(/^\d*\.?\d+$/)) {
+    addErrorMessage(depositeDiv, "Enter number only");
     deposite.style.border = "1px solid red";
   } else {
     return true;
@@ -436,13 +490,12 @@ saveButton.addEventListener("click", (e) => {
     sendData();
     noBorder();
     getTableData();
-  } else {
-    errorSpan.textContent = "Enter Valid Data";
   }
 });
 
-window.addEventListener("load", () => {
+window.onload = onWinowload();
+function onWinowload() {
   addButton.setAttribute("disabled", "disabled");
   getFilterOptions();
   getTableData();
-});
+}

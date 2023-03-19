@@ -25,7 +25,6 @@ body {
   margin-left: 20px;
 }
 
-
 .flex {
   display: flex;
 }
@@ -46,7 +45,6 @@ body {
   background: #c68e9c;
   padding: 3px 10px;
   border-radius: 10px;
-
 }
 
 .green {
@@ -54,7 +52,6 @@ body {
   background: #98c5ae;
   padding: 3px 10px;
   border-radius: 10px;
-
 }
 
 .gray {
@@ -113,12 +110,11 @@ body {
     0px 0px 0px 1px rgba(70, 79, 96, 0.16), 0px 2px 5px rgba(89, 96, 120, 0.1);
   cursor: pointer;
   border-radius: 6px;
-  padding: 6px 8px 6px 30px;
-  background: url('assests/filter.png') no-repeat 10px center;
+  padding: 6px 12px 6px 40px;
+  background: url("assests/filter.png") no-repeat 14px center;
   font-size: 14px;
   color: var(--blue);
 }
-
 
 .add-button {
   border-radius: 6px;
@@ -144,7 +140,6 @@ body {
 /* start:form */
 #form {
   flex-direction: column;
-  flex-grow: 1;
 }
 
 .input-group-1,
@@ -272,7 +267,7 @@ body {
   /* padding: 20px; */
   overflow: auto;
   position: relative;
-  min-height: 400px;
+  min-height: 395px;
 }
 
 #table {
@@ -332,7 +327,7 @@ body {
 
 tbody tr:nth-child(even) {
   background-color: #ebf0fa;
-  border-left: 2px solid #2264E6;
+  border-left: 2px solid #2264e6;
 }
 
 tbody tr:hover {
@@ -343,7 +338,6 @@ tbody tr:hover {
 
 /* start :media Queries */
 @media screen and (max-width: 670px) {
-
   .input-group-1,
   .input-group-2 {
     flex-direction: column;
